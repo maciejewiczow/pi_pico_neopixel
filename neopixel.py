@@ -178,20 +178,24 @@ class Neopixel:
         :param how_bright: [default: None] Brightness of current interval. If None, use global brightness value
         :return: None
         """
-        if how_bright is None:
-            how_bright = self.brightness()
-        sh_R, sh_G, sh_B, sh_W = self.shift
-        bratio = how_bright / 255.0
+        if type(rgb_w) is not int:
+            if how_bright is None:
+                how_bright = self.brightness()
+            sh_R, sh_G, sh_B, sh_W = self.shift
+            bratio = how_bright / 255.0
 
-        red = round(rgb_w[0] * bratio)
-        green = round(rgb_w[1] * bratio)
-        blue = round(rgb_w[2] * bratio)
-        white = 0
-        # if it's (r, g, b, w)
-        if len(rgb_w) == 4 and self.W_in_mode:
-            white = round(rgb_w[3] * bratio)
+            red = round(rgb_w[0] * bratio)
+            green = round(rgb_w[1] * bratio)
+            blue = round(rgb_w[2] * bratio)
+            white = 0
+            # if it's (r, g, b, w)
+            if len(rgb_w) == 4 and self.W_in_mode:
+                white = round(rgb_w[3] * bratio)
 
-        pix_value = white << sh_W | blue << sh_B | red << sh_R | green << sh_G
+            pix_value = white << sh_W | blue << sh_B | red << sh_R | green << sh_G
+        else:
+            pix_value = rgb_w
+
         # set some subset, if pixel_num is a slice:
         if type(pixel_num) is slice:
             for i in range(*pixel_num.indices(self.num_leds)):
